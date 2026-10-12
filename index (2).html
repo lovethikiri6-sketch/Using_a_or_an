@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A or An? Fun Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--sky1:#8fd3ff;--sky2:#e6f7ff;--grass:#7bd36b;--grass2:#4fb94a;--sun:#ffd23f;--card:#fffdf5;--ink:#2d3a5a;--ok:#2fb35a;--pick:#6c5ce7;--line:#ffe08a}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:'Baloo 2','Comic Sans MS','Trebuchet MS',sans-serif;color:var(--ink);background:linear-gradient(var(--sky1),var(--sky2) 70%);overflow-x:hidden;position:relative;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.sun{position:fixed;top:18px;right:18px;width:76px;height:76px;border-radius:50%;background:var(--sun);box-shadow:0 0 0 14px #ffe58a88,0 0 0 30px #ffe58a44}
+.cloud{position:fixed;background:#fff;border-radius:50px;height:40px;width:120px;opacity:.9;animation:drift 45s linear infinite}
+.cloud:before,.cloud:after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud:before{width:55px;height:55px;top:-25px;left:18px}.cloud:after{width:42px;height:42px;top:-16px;left:62px}
+.c1{top:14%;left:-150px}.c2{top:30%;left:-150px;animation-duration:60s;animation-delay:-25s}
+.hill{position:fixed;bottom:0;left:-10%;width:120%;height:20%;background:var(--grass);border-radius:50% 50% 0 0/100% 100% 0 0}
+.hill.b{height:14%;left:-30%;width:90%;background:var(--grass2)}
+.deco{position:fixed;font-size:34px;bottom:5%}
+@keyframes drift{to{transform:translateX(calc(100vw + 300px))}}
+@keyframes pop{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.app{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:16px 14px 90px}
+.card{background:var(--card);border:5px solid var(--line);border-radius:32px;padding:20px;box-shadow:0 8px 0 #f1c24f;animation:pop .3s ease}
+h1{font-size:2.3rem;line-height:1.05;margin:6px 0;text-align:center;color:#e8590c}
+h2{margin:0 0 8px;font-size:1.6rem;text-align:center}
+p{font-size:1.15rem;line-height:1.35;margin:8px 0}
+.big{font-size:4.5rem;text-align:center;animation:bounce 1.6s ease infinite}
+.rule{display:flex;gap:10px;margin:14px 0}
+.rule div{flex:1;border-radius:20px;padding:10px;text-align:center;font-weight:700}
+.rule .a{background:#d6f5d6}.rule .an{background:#ffe0e0}
+.btn{font-family:inherit;font-weight:800;font-size:1.3rem;border:0;border-radius:999px;padding:12px 24px;cursor:pointer;color:#fff;background:var(--pick);box-shadow:0 5px 0 #4a3db8}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #4a3db8}
+.btn:focus-visible,.opt:focus-visible{outline:4px solid #ff922b;outline-offset:3px}
+.btn.go{background:var(--ok);box-shadow:0 5px 0 #1f8a43}
+.btn.alt{background:#ff922b;box-shadow:0 5px 0 #d9730d}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.center{text-align:center;margin-top:14px}
+.top{display:flex;justify-content:space-between;font-weight:800;font-size:1.1rem}
+.bar{height:16px;background:#ffe9b3;border-radius:99px;overflow:hidden;margin:8px 0 14px;border:3px solid var(--line)}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#ff922b,#ffd23f);border-radius:99px}
+.pic{font-size:5rem;text-align:center;line-height:1.1}
+.q{font-size:1.7rem;font-weight:800;text-align:center;margin:6px 0 14px;line-height:1.2}
+.opts{display:grid;gap:10px}
+.opt{font-family:inherit;display:flex;align-items:center;gap:12px;width:100%;text-align:left;font-size:1.45rem;font-weight:700;color:var(--ink);background:#fff;border:4px solid #d9d9f3;border-radius:22px;padding:10px 14px;cursor:pointer}
+.opt b{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#e8e5ff;flex:none}
+.opt.sel{border-color:var(--pick);background:#efecff}
+.opt.sel b{background:var(--pick);color:#fff}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.dots{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:14px}
+.dots i{width:14px;height:14px;border-radius:50%;background:#e4dcc0}
+.dots i.d{background:var(--pick)}.dots i.cur{outline:3px solid #ff922b}
+.score{font-size:3.4rem;font-weight:800;text-align:center;color:var(--pick);line-height:1}
+.stars{font-size:2.4rem;text-align:center;letter-spacing:3px}
+.msg{background:#fff3c4;border-radius:22px;padding:12px 16px;font-weight:700;font-size:1.2rem;text-align:center;margin:12px 0}
+.stats{display:flex;gap:8px;margin:10px 0}
+.stats div{flex:1;text-align:center;border-radius:18px;padding:8px;font-weight:800}
+.stats .g{background:#d6f5d6}.stats .r{background:#ffe0e0}.stats .s{background:#e8e5ff}
+.sheet{margin-top:12px;display:grid;gap:8px}
+.row{border-radius:20px;padding:10px 12px;border:3px solid;background:#fff}
+.row.ok{border-color:#9be3b0}.row.bad{border-color:#f5b0a8}
+.row .t{font-weight:800;font-size:1.1rem}
+.row .e{font-size:1rem;margin-top:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+@media (max-width:420px){h1{font-size:1.9rem}.q{font-size:1.45rem}.pic{font-size:4rem}.sun{width:52px;height:52px}}
+</style>
+</head>
+<body>
+<div class="sun"></div><div class="cloud c1"></div><div class="cloud c2"></div>
+<div class="hill b"></div><div class="hill"></div>
+<span class="deco" style="left:6%">🌻</span><span class="deco" style="right:8%">🌳</span><span class="deco" style="left:44%">🌷</span>
+<main class="app" id="app"></main>
+<script>
+const Q=[
+["🍎","apple","an"],["🐱","cat","a"],["🐘","elephant","an"],["🐶","dog","a"],["🥚","egg","an"],
+["⚽","ball","a"],["🍦","ice cream","an"],["🌞","sun","a"],["🐙","octopus","an"],["🎂","cake","a"],
+["☂️","umbrella","an"],["🐟","fish","a"],["🍊","orange","an"],["🚌","bus","a"],["🐜","ant","an"]
+].map(([p,w,a],i)=>{
+ const ord=[[1,0,2],[0,2,1],[2,1,0],[0,1,2],[1,2,0],[2,0,1]][i%6],base=["a","an","the"];
+ const o=ord.map(k=>base[k]);
+ return {p,w,a,o,c:o.indexOf(a),e:`${w[0].toUpperCase()+w.slice(1)} starts with the sound “${a==="an"?"a, e, i, o, u":"b, c, d…"}”. We say ${a} ${w}.`};
+});
+const L=["a","b","c"];
+let cur=0,ans=Array(Q.length).fill(null),stage="start";
+const app=document.getElementById("app");
+
+function render(){
+ if(stage==="start")return start();
+ if(stage==="done")return result();
+ const q=Q[cur],done=ans.filter(x=>x!==null).length,last=cur===Q.length-1;
+ app.innerHTML=`<div class="card">
+ <div class="top"><span>Question ${cur+1} of ${Q.length}</span><span>⭐ ${done} done</span></div>
+ <div class="bar"><i style="width:${(cur+1)/Q.length*100}%"></i></div>
+ <div class="pic" aria-hidden="true">${q.p}</div>
+ <div class="q">This is ____ ${q.w}.</div>
+ <div class="opts" role="radiogroup" aria-label="Choose the right word">
+ ${q.o.map((o,i)=>`<button class="opt ${ans[cur]===i?"sel":""}" role="radio" aria-checked="${ans[cur]===i}" data-i="${i}"><b>${L[i]}</b>${o}</button>`).join("")}
+ </div>
+ <div class="nav">
+  <button class="btn alt" id="prev" ${cur===0?"disabled":""}>⬅ Back</button>
+  ${last?`<button class="btn go" id="sub">🎉 Submit</button>`:`<button class="btn" id="next">Next ➡</button>`}
+ </div>
+ <div class="dots">${Q.map((_,i)=>`<i class="${ans[i]!==null?"d":""} ${i===cur?"cur":""}"></i>`).join("")}</div>
+ </div>`;
+ app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{ans[cur]=+b.dataset.i;render()});
+ const pv=document.getElementById("prev");if(pv)pv.onclick=()=>{cur--;render()};
+ const nx=document.getElementById("next");if(nx)nx.onclick=()=>{cur++;render()};
+ const sb=document.getElementById("sub");
+ if(sb)sb.onclick=()=>{
+  const miss=ans.map((a,i)=>a===null?i+1:null).filter(Boolean);
+  if(miss.length){
+   const c=document.querySelector(".card");c.style.animation="shake .4s";
+   let n=document.getElementById("warn");
+   if(!n){n=document.createElement("div");n.id="warn";n.className="msg";c.insertBefore(n,c.querySelector(".nav"))}
+   n.textContent="Oops! Please answer question "+miss.join(", ")+" first. Use Back to find it.";return}
+  stage="done";render();window.scrollTo(0,0)};
+}
+function start(){
+ app.innerHTML=`<div class="card">
+ <div class="big">🦉</div>
+ <h1>A or An?<br>Fun Quiz</h1>
+ <p style="text-align:center">Hello, little learner! Pick the best word for each picture.</p>
+ <div class="rule"><div class="a">🐱 <u>a</u> cat<br><small>b, c, d…</small></div><div class="an">🍎 <u>an</u> apple<br><small>a, e, i, o, u</small></div></div>
+ <p style="text-align:center">15 questions. Tap a, b or c!</p>
+ <div class="center"><button class="btn go" id="go">▶ Let's Play!</button></div></div>`;
+ document.getElementById("go").onclick=()=>{stage="quiz";render()};
+}
+function result(){
+ let right=0;Q.forEach((q,i)=>{if(ans[i]===q.c)right++});
+ const wrong=Q.length-right,pct=Math.round(right/Q.length*100);
+ const stars=pct>=90?5:pct>=75?4:pct>=55?3:pct>=35?2:1;
+ let emoji,title,note;
+ if(pct>=90){emoji="🏆";title="Superstar!";note="Wow! You know a and an so well. Try telling a grown-up about things around you using a and an."}
+ else if(pct>=75){emoji="🌟";title="Great job!";note="You did really well! Look at the ones you missed and try again to win every star."}
+ else if(pct>=55){emoji="😊";title="Good work!";note="You are getting there! Remember: use “an” when a word starts with a, e, i, o or u."}
+ else if(pct>=35){emoji="🌱";title="Nice try!";note="You are growing like a little plant. Practise the rule and play again. You can do it!"}
+ else{emoji="🤗";title="Keep going!";note="Learning takes time and that is okay! Say it aloud: a cat, an apple. Then try again with a grown-up."}
+ app.innerHTML=`<div class="card">
+ <div class="big">${emoji}</div><h2>${title}</h2>
+ <div class="score">${right} / ${Q.length}</div>
+ <div class="stars" aria-label="${stars} stars">${"⭐".repeat(stars)}${"☆".repeat(5-stars)}</div>
+ <div class="stats"><div class="g">✅ Right<br>${right}</div><div class="r">❌ Oops<br>${wrong}</div><div class="s">📊 Score<br>${pct}%</div></div>
+ <div class="msg">${note}</div>
+ <p style="text-align:center"><b>Remember:</b> a + b, c, d… · an + a, e, i, o, u</p>
+ <h2 style="margin-top:14px">📋 Score Sheet</h2>
+ <div class="sheet">${Q.map((q,i)=>{const ok=ans[i]===q.c;return`<div class="row ${ok?"ok":"bad"}"><div class="t">${ok?"✅":"❌"} ${i+1}. ${q.p} ${q.a} ${q.w}</div><div class="e">${ok?"You said <b>"+q.o[ans[i]]+"</b>. Correct!":"You said <b>"+q.o[ans[i]]+"</b>. Right answer: <b>"+q.a+"</b>. "+q.e}</div></div>`}).join("")}</div>
+ <div class="nav"><button class="btn alt" id="rev">🔍 Review</button><button class="btn go" id="again">🔄 Play again</button></div></div>`;
+ document.getElementById("again").onclick=()=>{ans=Array(Q.length).fill(null);cur=0;stage="start";render()};
+ document.getElementById("rev").onclick=()=>{cur=0;stage="quiz";render()};
+}
+render();
+</script>
+</body>
+</html>
